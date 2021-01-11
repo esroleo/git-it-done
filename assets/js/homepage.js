@@ -13,8 +13,14 @@ var getUserRepos = function(user) {
     });
 };
           
+// Reference the left column which is the form ans the entry of username to search
 var userFormEl = document.querySelector("#user-form");
 var nameInputEl = document.querySelector("#username");
+
+// Reference the right column which will displayed the searched user and the repoes name and counts of issues
+var repoSearchTerm = document.querySelector("#repo-search-term"); // Spanned item that will contain the searched user
+var repoContainerEl = document.querySelector("#repos-container"); // Div list group
+
   
 //getUserRepos("microsoft");
 //getUserRepos("facebook");
@@ -37,6 +43,30 @@ var formSubmitHandler = function(event) {
 
 
 var displayRepos = function(repos, searchTerm) {
+    // clear old content
+    repoSearchTerm.textContent = searchTerm;
+    repoContainerEl.textContent = "";
+
+    // loop over repos
+    for (var i = 0; i < repos.length; i++) {
+    // format repo name
+    var repoName = repos[i].owner.login + "/" + repos[i].name;
+  
+    // create a container for each repo
+    var repoEl = document.createElement("div");
+    repoEl.classList = "list-item flex-row justify-space-between align-center";
+  
+    // create a span element to hold repository name
+    var titleEl = document.createElement("span");
+    titleEl.textContent = repoName;
+  
+    // append to container
+    repoEl.appendChild(titleEl);
+  
+    // append container to the dom
+    repoContainerEl.appendChild(repoEl);
+  }
+    
     console.log(repos);
     console.log(searchTerm);
 };
