@@ -5,12 +5,18 @@ var getUserRepos = function(user) {
     // make a request to the url
 
     fetch(apiUrl).then(function(response) {
+        if(response.ok) { // Check if ther response is ok, meaning a HTTP 200 response.
         response.json().then(function(data) {
             displayRepos(data, user);
             //console.log(data);
-
         });
-    });
+        } else { // Any other response like 400 500 will display the error.
+            window.alert("Error: " + response.statusText);
+        }
+    }).catch(function(error) { // as part of fetch there is another funciton called.
+        // Notice this `.catch()` getting chained onto the end of the `.then()` method
+        alert("Unable to connect to GitHub");
+      });
 };
           
 // Reference the left column which is the form ans the entry of username to search
@@ -43,6 +49,13 @@ var formSubmitHandler = function(event) {
 
 
 var displayRepos = function(repos, searchTerm) {
+
+    // check if api returned any repos
+    if (repos.length === 0) {
+        repoSearchTerm.textContent = searchTerm;
+        repoContainerEl.textContent = "No repositories found for " + searchTerm + ". Please try another user.";
+        return;
+    }
     // clear old content
     repoSearchTerm.textContent = searchTerm;
     repoContainerEl.textContent = "";
