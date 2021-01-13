@@ -1,4 +1,32 @@
-debugger;
+
+// Reference the left column which is the form ans the entry of username to search
+var userFormEl = document.querySelector("#user-form");
+var nameInputEl = document.querySelector("#username");
+
+// Reference the right column which will displayed the searched user and the repoes name and counts of issues
+var repoSearchTerm = document.querySelector("#repo-search-term"); // Spanned item that will contain the searched user
+var repoContainerEl = document.querySelector("#repos-container"); // Div list group
+
+// Button languages element assignation 
+languageButtonsEl = document.querySelector("#language-buttons");
+
+
+var getFeaturedRepos = function(language) {
+    var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
+
+    fetch(apiUrl).then(function(response) {
+        if (response.ok) {
+          response.json().then(function(data) {
+            //console.log(data)
+            displayRepos(data.items, language);
+          });
+        } else {
+          alert("Error: " + response.statusText);
+        }
+      });
+  };
+
+
 
 var getUserRepos = function(user) {
     // format github api url
@@ -21,13 +49,7 @@ var getUserRepos = function(user) {
       });
 };
           
-// Reference the left column which is the form ans the entry of username to search
-var userFormEl = document.querySelector("#user-form");
-var nameInputEl = document.querySelector("#username");
 
-// Reference the right column which will displayed the searched user and the repoes name and counts of issues
-var repoSearchTerm = document.querySelector("#repo-search-term"); // Spanned item that will contain the searched user
-var repoContainerEl = document.querySelector("#repos-container"); // Div list group
 
   
 //getUserRepos("microsoft");
@@ -109,5 +131,22 @@ var displayRepos = function(repos, searchTerm) {
 };
 
 
+var buttonClickHandler = function (event) {
+
+    let language = event.target.getAttribute("data-language")
+    //console.log(language);
+    if (language){
+        getFeaturedRepos(language);
+        // clear old content from language
+        // clear old content
+        repoContainerEl.textContent = "";
+    } 
+    
+
+};
+
+//getFeaturedRepos(getFeaturedRepos);
+
 userFormEl.addEventListener("submit", formSubmitHandler);
+languageButtonsEl.addEventListener("click", buttonClickHandler);
 
